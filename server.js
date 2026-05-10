@@ -109,7 +109,7 @@ app.post("/api/analyze", async (req, res) => {
           },
           {
             role: "user",
-            content: JSON.stringify(content)
+            content: content.map(m => m.text || "").join("\n")
           }
         ]
       })
