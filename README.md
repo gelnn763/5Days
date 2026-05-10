@@ -34,7 +34,7 @@ Chicago files 23,000+ eviction cases per year. Most tenants don't know what thei
   - **Action plan** — numbered checklist of exactly what to do next
 - **Read aloud button** — uses browser speech synthesis, no extra API needed
 - **English / Spanish toggle** — full bilingual response support
-- **Image upload** — photograph your notice on your phone, Claude reads it via vision
+- **Image upload** — photograph your notice on your phone, OpenRouter reads it via a base64 encoded string.
 
 ### My Case Dashboard (`mycase.html`)
 - **Court Date Tracker** — countdown timer to your court date + what-to-bring checklist
@@ -90,13 +90,13 @@ Many eviction notices have procedural errors. Common ones include:
 | Layer | Technology |
 |---|---|
 | Frontend | HTML, CSS, vanilla JavaScript |
-| AI | Anthropic Claude API (`openai/gpt-oss-120b:free`) |
+| AI | OpenRouter API (`openai/gpt-oss-120b:free`) |
 | Vision | Text extraction from uploaded images |
 | Speech | Browser Web Speech API (no external dependency) |
 | Storage | None — all data stays in the user's browser session |
 | Hosting | Static files — deployable anywhere |
 
-No backend. No database. No user accounts. All API calls go directly from the browser to Anthropic's API. The user's API key is never stored.
+No backend. No database. No user accounts. All API calls go directly from the browser to OpenRouter's API. The user's API key is never stored.
 
 ---
 
@@ -136,6 +136,10 @@ All 7 files must be in the same directory for navigation and shared styles to wo
 3. Your site will be live at `https://fivedays-3w45.onrender.com`
 
 ---
+
+###Website
+1. Website runs on Render
+2. URL: https://fivedays-3w45.onrender.com/analyze.html
 
 ## Free Legal Resources
 
