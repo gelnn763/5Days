@@ -90,7 +90,7 @@ app.post("/api/analyze", async (req, res) => {
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
-    return res.status(500).json({ error: "Server not configured. Please contact the site administrator." });
+  console.error("Missing ANTHROPIC_API_KEY");
   }
 
   try {
