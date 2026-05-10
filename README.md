@@ -133,7 +133,7 @@ All 7 files must be in the same directory for navigation and shared styles to wo
 **GitHub Pages:**
 1. Push this repo to GitHub
 2. Go to Settings → Pages → Source: main branch / root
-3. Your site will be live at `https://yourusername.github.io/5days`
+3. Your site will be live at `https://fivedays-3w45.onrender.com`
 
 ---
 
