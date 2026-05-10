@@ -90,35 +90,36 @@ app.get("/api/health", (req, res) => {
  */
 function fallbackResponse() {
   return `---NOTICE_TYPE---
-Demo Mode Analysis
+Unable to analyze at this time.
 
 ---PLAIN_ENGLISH---
-We could not reach the AI service, so this is a fallback analysis. Your app is working correctly.
+Our AI analysis service is temporarily unavailable. Please try again in a moment.
 
 ---DEADLINE---
-Check your notice directly or consult legal aid.
+Do not wait for this tool — if you have an active eviction notice, contact the Chicago Eviction Help Line immediately at 312-347-7600.
 
 ---RIGHTS---
-1. You still have tenant rights under Illinois law
-2. Never ignore eviction notices
-3. Seek legal help immediately if unsure
+1. You have the right to contest any eviction in court
+2. Contact legal aid immediately — do not ignore any deadlines
+3. Chicago Eviction Help Line: 312-347-7600
 
 ---DEFECT_STATUS---
-WARNING
-AI service unavailable, fallback mode used.
+VALID
+Unable to check for defects without AI analysis. Please contact legal aid.
 
 ---MISTAKES---
-1. Ignoring the notice
-2. Missing court deadlines
-3. Not seeking help early
+1. Do not ignore the notice or any court dates
+2. Do not wait — contact legal aid today
+3. Do not move out without a written agreement
 
 ---DRAFT_LETTER---
-[DEMO MODE] AI unavailable. Please retry.
+Please contact legal aid for help drafting a response:
+Legal Aid Chicago: legalaidchicago.org
 
 ---NEXT_STEPS---
-1. Try again later
-2. Contact Legal Aid Chicago
-3. Call 312-347-7600`;
+1. Call the Chicago Eviction Help Line: 312-347-7600
+2. Contact Legal Aid Chicago: legalaidchicago.org
+3. Do not miss any court dates`;
 }
 
 /**
