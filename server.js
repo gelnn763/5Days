@@ -102,8 +102,7 @@ app.post("/api/analyze", async (req, res) => {
         "X-Title": "5Days"
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-3.1-8b-instruct:free",
-        messages: [
+        model: "mistralai/mistral-7b-instruct:free",        messages: [
           {
             role: "system",
             content: lang === "es" ? SYSTEM_PROMPT_ES : SYSTEM_PROMPT
