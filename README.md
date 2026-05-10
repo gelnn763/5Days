@@ -34,7 +34,7 @@ Chicago files 23,000+ eviction cases per year. Most tenants don't know what thei
   - **Action plan** — numbered checklist of exactly what to do next
 - **Read aloud button** — uses browser speech synthesis, no extra API needed
 - **English / Spanish toggle** — full bilingual response support
-- **Image upload** — photograph your notice on your phone, OpenRouter reads it via a base64 encoded string.
+- **Image upload** — photograph your notice on your phone; OpenAI extracts and analyzes the text
 
 ### My Case Dashboard (`mycase.html`)
 - **Court Date Tracker** — countdown timer to your court date + what-to-bring checklist
@@ -51,7 +51,7 @@ Chicago files 23,000+ eviction cases per year. Most tenants don't know what thei
 
 ### Additional Pages
 - **Home** (`index.html`) — animated hero, how-it-works, live case study walkthrough, asymmetry explainer
-- **About** (`about.html`) — mission, story, what we built with
+- **About** (`about.html`) — mission, story, and project background
 - **Contact** (`contact.html`) — contact form + emergency legal resources
 
 ---
@@ -90,56 +90,100 @@ Many eviction notices have procedural errors. Common ones include:
 | Layer | Technology |
 |---|---|
 | Frontend | HTML, CSS, vanilla JavaScript |
-| AI | OpenRouter API (`openai/gpt-oss-120b:free`) |
-| Vision | Text extraction from uploaded images |
-| Speech | Browser Web Speech API (no external dependency) |
-| Storage | None — all data stays in the user's browser session |
-| Hosting | Static files — deployable anywhere |
+| Backend | Node.js + Express |
+| AI | OpenAI API via OpenRouter |
+| Vision | OCR/text extraction from uploaded images |
+| Speech | Browser Web Speech API |
+| Hosting | Render |
+| Storage | None — no user data stored |
 
-No backend. No database. No user accounts. All API calls go directly from the browser to OpenRouter's API. The user's API key is never stored.
+Additional implementation details:
+
+- Express API server with rate limiting
+- Structured AI prompting for legal consistency
+- Spanish-language response support
+- Static frontend served through Express
+- CORS + JSON body parsing enabled
+- Mobile-friendly upload flow
 
 ---
 
 ## Setup
 
 ### Run locally
+
 ```bash
 git clone https://github.com/yourusername/5days.git
 cd 5days
-# Open index.html in any browser
-open index.html
+npm install
+npm start
 ```
 
-All 7 files must be in the same directory for navigation and shared styles to work:
+Then open:
 
+```bash
+http://localhost:3000
 ```
+
+### Environment Variables
+
+Create a `.env` file:
+
+```env
+OPENROUTER_API_KEY=your_api_key_here
+PORT=3000
+```
+
+### Project Structure
+
+```bash
 5days/
-├── about.html       # Mission and story
-├── analyze.html     # Main analysis tool
-├── contact.html     # Contact formtracker, evidence checklist, communication log
-├── index.html       # Homepage
-├── mycase.html      # Court 
-├── resources.html   # Legal resources and FAQ
-└── shared.css       # Shared styles (required by all pages)
+├── public/
+│   ├── index.html
+│   ├── analyze.html
+│   ├── mycase.html
+│   ├── resources.html
+│   ├── about.html
+│   ├── contact.html
+│   ├── shared.css
+│   └── app.js
+├── server.js
+├── package.json
+├── package-lock.json
+└── README.md
 ```
 
-### Get an API key
-1. Go to [openrouter.ai/settings/keys](https://openrouter.ai/settings/keys)
-2. Create an account and generate an API key
-3. Paste it into the API key field on the Analyze page
-4. Your key is used only for direct calls to git Anthropic — it is never stored or logged
+### Get an API Key
 
-### Deploy (optional)
-**GitHub Pages:**
-1. Push this repo to GitHub
-2. Go to Settings → Pages → Source: main branch / root
-3. Your site will be live at `https://fivedays-3w45.onrender.com`
+1. Go to https://openrouter.ai/settings/keys
+2. Create an account
+3. Generate an API key
+4. Add it to your `.env` file
+
+Your API key is never exposed to end users and is stored only on the server.
 
 ---
 
-### Website
-1. Website runs on Render
-2. URL: https://fivedays-3w45.onrender.com/analyze.html
+## Deploy
+
+### Render Deployment
+
+1. Push the project to GitHub
+2. Create a new Web Service on Render
+3. Connect the GitHub repository
+4. Add environment variable:
+
+```env
+OPENROUTER_API_KEY=your_key_here
+```
+
+5. Deploy
+
+### Live Website
+
+https://fivedays-3w45.onrender.com
+
+---
 
 ## Free Legal Resources
 
@@ -149,24 +193,38 @@ All 7 files must be in the same directory for navigation and shared styles to wo
 |---|---|
 | Chicago Eviction Help Line | 312-347-7600 |
 | Metropolitan Tenants Organization | 773-292-4980 |
-| Legal Aid Chicago | [legalaidchicago.org](https://legalaidchicago.org) |
-| Cook County Court Self-Help | [cookcountycourt.org/selfhelp](https://cookcountycourt.org/selfhelp) |
-| Illinois Legal Aid Online | [illinoislegalaid.org](https://illinoislegalaid.org) |
+| Legal Aid Chicago | https://legalaidchicago.org |
+| Cook County Court Self-Help | https://cookcountycourt.org/selfhelp |
+| Illinois Legal Aid Online | https://illinoislegalaid.org |
 
 ---
 
 ## Disclaimer
 
-5Days provides legal **information**, not legal **advice**. Nothing in this tool creates an attorney-client relationship. Laws and local ordinances change — always verify with a licensed Illinois attorney or legal aid organization before taking action in court.
+5Days provides legal **information**, not legal **advice**. Nothing in this tool creates an attorney-client relationship. Laws and local ordinances change frequently — always verify information with a licensed Illinois attorney or legal aid organization before taking legal action.
 
 ---
 
 ## Built At
 
-**ALI Builds 2025** — A beginner-friendly Chicago hackathon focused on social impact.  
-Prompt: *"The world's biggest companies are built on leverage. They give people access to something they previously lacked: information, speed, capital, coordination, automation, networks, or opportunity."*  
+**ALI Builds 2025** — A beginner-friendly Chicago hackathon focused on social impact.
+
+Prompt:
+
+> *"The world's biggest companies are built on leverage. They give people access to something they previously lacked: information, speed, capital, coordination, automation, networks, or opportunity."*
+
 We chose tenants facing eviction.
 
 ---
 
-*5Days — Chicago, IL · Powered by Claude AI · Not a law firm*
+## Vision
+
+5Days is designed around a simple idea:
+
+**The people with the least legal power often face the fastest legal deadlines.**
+
+The goal is not to replace attorneys. The goal is to give renters enough clarity, context, and immediate direction to avoid panic and make informed decisions during the first critical hours after receiving a notice.
+
+---
+
+*5Days — Chicago, IL · Powered by OpenAI + OpenRouter · Not a law firm*
