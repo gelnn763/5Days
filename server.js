@@ -160,7 +160,7 @@ app.post("/api/analyze", async (req, res) => {
       headers: {
         "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://localhost",
+        "HTTP-Referer": "https://5days.onrender.com",
         "X-Title": "5Days"
       },
       body: JSON.stringify({
