@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resources — 5Days</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.resource-section { margin-bottom: 3rem; }
+
+.resource-section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.resource-section-sub { font-size: 0.85rem; color: var(--ink4); margin-bottom: 1.25rem; }
+
+.resource-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+
+.resource-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.4rem;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resource-card:hover { border-color: var(--red); box-shadow: 0 4px 16px rgba(232,41,28,0.08); }
+
+.resource-card-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; }
+.resource-card-desc { font-size: 0.82rem; color: var(--ink4); line-height: 1.55; flex: 1; }
+.resource-card-contact { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--red); margin-top: 0.25rem; }
+
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+  background: var(--white);
+}
+
+.faq-q {
+  padding: 1rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.92rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  user-select: none;
+}
+
+.faq-q:hover { background: var(--paper2); }
+.faq-arrow { font-size: 0.8rem; color: var(--ink4); transition: transform 0.2s; flex-shrink: 0; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+.faq-a {
+  display: none;
+  padding: 0 1.25rem 1.1rem;
+  font-size: 0.88rem;
+  color: var(--ink3);
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.faq-item.open .faq-a { display: block; }
+
+.law-card {
+  background: var(--ink);
+  color: white;
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.law-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; }
+.law-full { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: #666; margin-bottom: 0.75rem; letter-spacing: 0.04em; }
+.law-desc { font-size: 0.85rem; color: #AAA; line-height: 1.6; }
+.law-key { margin-top: 0.75rem; font-size: 0.8rem; color: var(--red); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">⏱</div>5Days</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="analyze.html">Analyze</a></li>
+    <li><a href="mycase.html">My Case</a></li>
+    <li><a href="resources.html" class="active">Resources</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="analyze.html" class="nav-cta">Get Help Now</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-tag">Resources</div>
+    <h1>Know your rights.<br><span>Know who to call.</span></h1>
+    <p>Free legal help, tenant rights guides, and the laws that protect you in Chicago and Illinois.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="resource-section">
+    <div class="resource-section-title">🆘 Emergency — facing eviction now</div>
+    <div class="resource-section-sub">If you have a court date coming up or a notice with a deadline, contact these organizations immediately.</div>
+    <div class="resource-cards">
+      <a class="resource-card" href="tel:3123477600">
+        <div class="resource-card-name">Chicago Eviction Help Line</div>
+        <div class="resource-card-desc">Free legal information and referrals for Chicago tenants facing eviction. Call as soon as you receive your notice.</div>
+        <div class="resource-card-contact">📞 312-347-7600</div>
+      </a>
+      <a class="resource-card" href="https://legalaidchicago.org" target="_blank">
+        <div class="resource-card-name">Legal Aid Chicago</div>
+        <div class="resource-card-desc">Free civil legal services for low-income Chicago residents. Can represent you in eviction court.</div>
+        <div class="resource-card-contact">🌐 legalaidchicago.org</div>
+      </a>
+      <a class="resource-card" href="tel:7732924980">
+        <div class="resource-card-name">Metropolitan Tenants Organization</div>
+        <div class="resource-card-desc">Tenant advocacy, counseling, and education in Chicago. Helps tenants understand their rights and connect to resources.</div>
+        <div class="resource-card-contact">📞 773-292-4980</div>
+      </a>
+      <a class="resource-card" href="https://cookcountycourt.org/selfhelp" target="_blank">
+        <div class="resource-card-name">Cook County Court Self-Help</div>
+        <div class="resource-card-desc">Free self-help resources for people representing themselves in Cook County eviction court.</div>
+        <div class="resource-card-contact">🌐 cookcountycourt.org/selfhelp</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="resource-section">
+    <div class="resource-section-title">📚 Know your rights</div>
+    <div class="resource-section-sub">General tenant rights resources for Illinois and Chicago renters.</div>
+    <div class="resource-cards">
+      <a class="resource-card" href="https://illinoislegalaid.org" target="_blank">
+        <div class="resource-card-name">Illinois Legal Aid Online</div>
+        <div class="resource-card-desc">Plain-language guides to Illinois tenant rights, eviction procedures, and legal forms. Available 24/7.</div>
+        <div class="resource-card-contact">🌐 illinoislegalaid.org</div>
+      </a>
+      <a class="resource-card" href="https://chicago.gov/city/en/depts/doh/provdrs/tenants.html" target="_blank">
+        <div class="resource-card-name">City of Chicago Tenant Resources</div>
+        <div class="resource-card-desc">Official City of Chicago resources for renters, including RLTO information and rental assistance programs.</div>
+        <div class="resource-card-contact">🌐 chicago.gov</div>
+      </a>
+      <a class="resource-card" href="https://www.tenants-rights.org" target="_blank">
+        <div class="resource-card-name">Tenants Rights Organization</div>
+        <div class="resource-card-desc">Education and advocacy for Illinois renters. Plain-language summaries of your rights under state and local law.</div>
+        <div class="resource-card-contact">🌐 tenants-rights.org</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="resource-section">
+    <div class="resource-section-title">⚖️ The laws that protect you</div>
+    <div class="resource-section-sub">5Days is grounded in these specific laws. Here's what they say.</div>
+    <div class="law-card">
+      <div class="law-name">Chicago Residential Landlord and Tenant Ordinance</div>
+      <div class="law-full">CHICAGO MUNICIPAL CODE · CHAPTER 5-12</div>
+      <div class="law-desc">The RLTO is one of the strongest tenant protection laws in the country. It applies to most residential rentals in Chicago and gives tenants rights that significantly exceed Illinois state law — including required notice formats, mandatory disclosures, rent withholding for uninhabitable conditions, and anti-retaliation protections.</div>
+      <div class="law-key">→ If your landlord violated the RLTO in how they served your notice, it may be a complete defense.</div>
+    </div>
+    <div class="law-card">
+      <div class="law-name">Illinois Residential Tenants Act</div>
+      <div class="law-full">ILCS CHAPTER 765, ACTS 710–735</div>
+      <div class="law-desc">Illinois state law governing landlord-tenant relationships. Sets baseline protections for all Illinois renters — security deposit rules, habitability requirements, notice periods, and eviction procedures. Chicago's RLTO adds additional protections on top of this.</div>
+      <div class="law-key">→ Applies statewide, including areas outside Chicago where the RLTO does not apply.</div>
+    </div>
+    <div class="law-card">
+      <div class="law-name">Illinois Eviction Act</div>
+      <div class="law-full">735 ILCS 5/9-201 THROUGH 9-321</div>
+      <div class="law-desc">Governs the eviction (forcible entry and detainer) process in Illinois courts. Sets the legal procedure a landlord must follow — required notice periods, court filing requirements, and tenant rights during the proceeding. Many evictions fail because landlords don't follow this procedure correctly.</div>
+      <div class="law-key">→ Procedural errors by the landlord can result in dismissal of the eviction case.</div>
+    </div>
+  </div>
+
+  <div class="resource-section" id="faq">
+    <div class="resource-section-title">❓ Frequently asked questions</div>
+    <div class="resource-section-sub">Common questions from tenants facing eviction in Chicago.</div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What happens if I ignore the eviction notice? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">If you ignore the notice and don't pay or cure the violation within the notice period, your landlord can file an eviction lawsuit in Cook County court. You will be served with a summons and given a court date. If you don't appear in court, the judge will almost certainly rule against you by default — meaning you can be ordered to leave. An eviction judgment on your record makes it extremely difficult to rent housing in the future. Never ignore a notice or a court date.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can my landlord change the locks or shut off utilities to force me out? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">No. This is called an "illegal lockout" and it is against the law in Chicago and Illinois, even if you owe rent. Your landlord must go through the court process. If your landlord changes the locks, removes your belongings, or shuts off essential services (heat, water, electricity), call the police and contact Legal Aid Chicago or the Metropolitan Tenants Organization immediately. You may be entitled to significant damages.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What does it mean if my notice has a "procedural defect"? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">A procedural defect means the landlord didn't follow the legal requirements for serving the notice — for example, using the wrong notice period, failing to sign the notice, not including required language under the Chicago RLTO, or serving the notice improperly. A defective notice can be a complete legal defense, meaning the judge can dismiss the eviction case entirely. However, the landlord can usually fix the defect and start over, so use the time to contact legal aid.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">I paid my rent but still got a 5-day notice. What do I do? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Gather every piece of evidence you have of payment — bank statements, receipts, money order stubs, Venmo/Zelle records, text messages confirming payment. Do not ignore the notice even if you know you paid. Respond in writing to the landlord disputing the notice and stating that rent was paid in full on [date]. Keep copies of everything. If it proceeds to court, your payment evidence is your defense.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can I be evicted if my apartment has serious repair problems? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Under the Chicago RLTO, tenants have the right to withhold rent or make repairs and deduct the cost if the landlord has failed to maintain a habitable unit and has been given written notice and a reasonable time to fix the problem. However, the procedure for doing this legally is specific — you must follow it correctly or it can backfire. Contact Legal Aid Chicago before withholding rent.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How long does the eviction process take in Chicago? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">The timeline varies, but generally: after receiving a notice, you have the notice period (5, 10, 14, or 30 days) before the landlord can file in court. After filing, you are typically served a summons with a court date 7–40 days out. If the landlord wins, there is usually a period of at least a few days before a sheriff's eviction can be executed. The total process typically takes 6–12 weeks from first notice, but can be much faster if you miss court dates.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="margin-bottom:0.75rem; display:inline-flex;"><div class="nav-logo-icon">⏱</div>5Days</a>
+      <p>Tenant rights information for Chicago and Cook County. Free, always.</p>
+    </div>
+    <div class="footer-col"><h4>Tools</h4><ul><li><a href="analyze.html">Analyze a Notice</a></li><li><a href="mycase.html">Court Date Tracker</a></li><li><a href="mycase.html">Evidence Checklist</a></li></ul></div>
+    <div class="footer-col"><h4>Learn</h4><ul><li><a href="resources.html">Resources</a></li><li><a href="about.html">About 5Days</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Emergency</h4><ul><li><a href="tel:3123477600">Eviction Help Line</a></li><li><a href="https://legalaidchicago.org">Legal Aid Chicago</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 5Days · Built for <span>ALI Builds Hackathon</span></span>
+    <span>Not a law firm · Powered by Claude AI</span>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(el) { el.classList.toggle('open'); }
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  const showing = links.style.display === 'flex';
+  links.style.display = showing ? 'none' : 'flex';
+  if (!showing) Object.assign(links.style, { flexDirection:'column', position:'absolute', top:'64px', left:'0', right:'0', background:'#0F0F0F', padding:'1rem', zIndex:'999' });
+}
+</script>
+</body>
+</html>

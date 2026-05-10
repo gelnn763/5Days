@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyze My Notice — 5Days</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.input-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.input-card-header {
+  background: var(--ink);
+  padding: 1.1rem 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.input-card-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+}
+
+.input-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--paper2);
+}
+
+.input-tab {
+  padding: 0.75rem 1.4rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--ink3);
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.input-tab.active { color: var(--red); border-bottom-color: var(--red); background: var(--white); }
+
+.tab-panel { display: none; padding: 1.6rem; }
+.tab-panel.active { display: block; }
+
+.notice-textarea {
+  width: 100%;
+  min-height: 200px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.notice-textarea:focus { border-color: var(--red); }
+.notice-textarea::placeholder { color: var(--ink4); font-style: italic; }
+
+.input-hint { font-size: 0.78rem; color: var(--ink4); margin-top: 0.5rem; font-style: italic; }
+
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--paper);
+  position: relative;
+}
+
+.upload-zone:hover, .upload-zone.drag-over { border-color: var(--red); background: var(--red-pale); }
+
+.upload-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.upload-icon { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+.upload-zone h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+.upload-zone p { font-size: 0.82rem; color: var(--ink4); }
+
+.image-preview { margin-top: 1rem; display: none; }
+.image-preview img { max-width: 100%; max-height: 300px; border-radius: 8px; border: 1px solid var(--border); }
+.image-preview-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--green); margin-bottom: 0.5rem; }
+
+.lang-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.lang-bar-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--ink4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lang-pills {
+  display: flex;
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.lang-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  padding: 5px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  color: var(--ink4);
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.lang-pill.active { background: var(--red); color: white; }
+
+.analyze-btn {
+  width: 100%;
+  padding: 1.1rem 2rem;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 0 0 16px 16px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.analyze-btn:hover:not(:disabled) { background: var(--red-dark); }
+.analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.loading-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  display: none;
+  margin-bottom: 1.75rem;
+}
+
+.loading-card.show { display: block; }
+.loading-msg { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin: 1.25rem 0 0.4rem; }
+.loading-sub { font-size: 0.84rem; color: var(--ink4); font-style: italic; }
+
+.error-card {
+  background: var(--red-pale);
+  border: 1px solid var(--red-pale2);
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem;
+  color: var(--red-dark);
+  font-size: 0.87rem;
+  display: none;
+  margin-bottom: 1.5rem;
+}
+
+.error-card.show { display: block; }
+.error-card strong { font-weight: 600; display: block; margin-bottom: 3px; }
+
+#results { display: none; }
+#results.show { display: block; }
+
+.results-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.results-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.results-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.icon-btn:hover { border-color: var(--ink); color: var(--ink); }
+.icon-btn.speaking { background: var(--red-pale); border-color: var(--red); color: var(--red-dark); }
+
+.section-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 1.1rem;
+  overflow: hidden;
+  animation: fadeUp 0.4s ease both;
+}
+
+.section-card:nth-child(1) { animation-delay: 0.05s; }
+.section-card:nth-child(2) { animation-delay: 0.1s; }
+.section-card:nth-child(3) { animation-delay: 0.15s; }
+.section-card:nth-child(4) { animation-delay: 0.2s; }
+.section-card:nth-child(5) { animation-delay: 0.25s; }
+.section-card:nth-child(6) { animation-delay: 0.3s; }
+.section-card:nth-child(7) { animation-delay: 0.35s; }
+.section-card:nth-child(8) { animation-delay: 0.4s; }
+
+.deadline-card .section-body {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+  color: var(--red);
+}
+
+.draft-card .section-body {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.8;
+  background: var(--paper2);
+}
+
+.copy-btn {
+  margin: 0 1.4rem 1.4rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.04em;
+}
+
+.copy-btn:hover { background: #222; }
+.copy-btn.copied { background: var(--green); }
+
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.75rem;
+  padding: 1.4rem;
+}
+
+.resource-item {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.15s;
+  display: block;
+}
+
+.resource-item:hover { border-color: var(--red); background: var(--red-pale); }
+.resource-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.84rem; margin-bottom: 2px; }
+.resource-detail { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--red); }
+
+.reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.65rem 1.3rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.84rem;
+  color: var(--ink3);
+  cursor: pointer;
+  margin-top: 1.75rem;
+  transition: all 0.15s;
+}
+
+.reset-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+.mycase-banner {
+  background: var(--ink);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.mycase-banner p {
+  color: #AAA;
+  font-size: 0.87rem;
+  font-weight: 300;
+}
+
+.mycase-banner strong { color: white; display: block; font-family: 'Syne', sans-serif; font-size: 0.95rem; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">⏱</div>
+    5Days
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="analyze.html" class="active">Analyze</a></li>
+    <li><a href="mycase.html">My Case</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="analyze.html" class="nav-cta">Get Help Now</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-tag">Analyze your notice</div>
+    <h1>What does your <span>notice mean?</span></h1>
+    <p>Paste, photograph, or describe your eviction notice. We'll decode it, check it for legal defects, and tell you exactly what to do.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="lang-bar">
+    <span class="lang-bar-label">Response language</span>
+    <div class="lang-pills">
+      <button class="lang-pill active" onclick="setLang('en', this)">English</button>
+      <button class="lang-pill" onclick="setLang('es', this)">Español</button>
+    </div>
+  </div>
+
+  <div class="input-card">
+    <div class="input-card-header">
+      <div class="step-badge">1</div>
+      <h2>Upload or describe your notice</h2>
+    </div>
+    <div class="input-tabs">
+      <button class="input-tab active" onclick="switchTab('text')">Paste text</button>
+      <button class="input-tab" onclick="switchTab('image')">Upload photo</button>
+      <button class="input-tab" onclick="switchTab('describe')">Describe it</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-text">
+      <textarea class="notice-textarea" id="noticeText" placeholder="Paste the full text of your eviction notice here. Include everything — dates, amounts, any codes at the bottom."></textarea>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+        <p class="input-hint" style="margin-top:0;">Tip: Copy everything, including the date, landlord name, and dollar amounts.</p>
+        <button onclick="loadSample()" style="padding:0.4rem 0.9rem; background:none; border:1px solid var(--border); border-radius:8px; font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--ink4); cursor:pointer; letter-spacing:0.04em; white-space:nowrap; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--ink)';this.style.color='var(--ink)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink4)'">⚡ Load sample notice</button>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-image">
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="imageInput" accept="image/*" onchange="handleImage(event)">
+        <span class="upload-icon">📄</span>
+        <h3>Drop your photo here</h3>
+        <p>Tap to select from your camera or gallery · JPG, PNG, HEIC accepted</p>
+      </div>
+      <div class="image-preview" id="imagePreview">
+        <div class="image-preview-label">✓ Image ready to analyze</div>
+        <img id="previewImg" src="" alt="Notice preview">
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-describe">
+      <textarea class="notice-textarea" id="describeText" placeholder="Describe what your notice says in your own words. For example: 'My landlord slid a paper under my door. It says I have 5 days to pay $800 or leave. It's dated October 3rd.' You can write in Spanish too / También puedes escribir en español."></textarea>
+      <p class="input-hint">Write however feels natural — English or Spanish both work.</p>
+    </div>
+
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">
+      ⏱ Analyze My Notice
+    </button>
+  </div>
+
+  <div class="error-card" id="errorCard">
+    <strong>Something went wrong</strong>
+    <span id="errorMsg"></span>
+  </div>
+
+  <div class="loading-card" id="loadingCard">
+    <div class="spinner" style="margin:0 auto;"></div>
+    <div class="loading-msg" id="loadingMsg">Analyzing your notice...</div>
+    <div class="loading-sub" id="loadingSub">Checking Illinois law and Chicago RLTO</div>
+  </div>
+
+  <div id="results">
+    <div class="results-toolbar">
+      <div class="results-title">Your Analysis</div>
+      <div class="results-actions">
+        <button class="icon-btn" id="readAloudBtn" onclick="toggleReadAloud()">🔊 Read aloud</button>
+        <button class="icon-btn" onclick="window.print()">🖨 Print</button>
+      </div>
+    </div>
+
+    <div id="resultsContent"></div>
+
+    <div class="mycase-banner">
+      <div>
+        <strong>Save this to My Case</strong>
+        <p>Track your court date, build your evidence checklist, and log landlord communications.</p>
+      </div>
+      <a href="mycase.html" class="btn btn-primary" style="font-size:0.87rem; white-space:nowrap;">Go to My Case →</a>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Legal Disclaimer:</strong> 5Days provides legal information, not legal advice. This analysis does not create an attorney-client relationship. Always verify with a licensed Illinois attorney or legal aid organization before taking action in court.
+    </div>
+
+    <button class="reset-btn" onclick="reset()">← Analyze another notice</button>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="margin-bottom:0.75rem; display:inline-flex;">
+        <div class="nav-logo-icon">⏱</div>
+        5Days
+      </a>
+      <p>Tenant rights information for Chicago and Cook County. Free, always.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Tools</h4>
+      <ul>
+        <li><a href="analyze.html">Analyze a Notice</a></li>
+        <li><a href="mycase.html">Court Date Tracker</a></li>
+        <li><a href="mycase.html">Evidence Checklist</a></li>
+        <li><a href="mycase.html">Communication Log</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <ul>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="about.html">About 5Days</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Emergency</h4>
+      <ul>
+        <li><a href="tel:3123477600">Eviction Help Line</a></li>
+        <li><a href="https://legalaidchicago.org">Legal Aid Chicago</a></li>
+        <li><a href="https://illinoislegalaid.org">IL Legal Aid Online</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 5Days · Built for <span>ALI Builds Hackathon</span></span>
+    <span>Not a law firm · Powered by Claude AI</span>
+  </div>
+</footer>
+
+<script>
+// System prompts are handled server-side — see server.js
+
+let currentTab = 'text';
+let imageBase64 = null;
+let imageMediaType = null;
+let currentLang = 'en';
+let isSpeaking = false;
+let utterance = null;
+let fullResultText = '';
+
+function setLang(lang, btn) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.input-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelectorAll('.input-tab')[['text','image','describe'].indexOf(tab)].classList.add('active');
+}
+
+function handleImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  imageMediaType = file.type || 'image/jpeg';
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imageBase64 = e.target.result.split(',')[1];
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('imagePreview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function showError(msg) {
+  document.getElementById('errorMsg').textContent = msg;
+  document.getElementById('errorCard').classList.add('show');
+}
+
+function hideError() { document.getElementById('errorCard').classList.remove('show'); }
+
+function loadSample() {
+  document.getElementById('noticeText').value = `5-DAY NOTICE TO PAY RENT OR QUIT
+
+To: Maria Gonzalez
+2847 W. Cermak Rd, Apt 3B
+Chicago, IL 60608
+
+You are hereby notified that there is now due and owing from you to the undersigned the sum of $1,150.00 for rent for the period of October 1-31, 2024.
+
+You must pay said amount within FIVE (5) DAYS of service of this notice or vacate and deliver up possession of the premises.
+
+Dated: October 3, 2024
+R. Sterns Properties LLC`;
+  switchTab('text');
+  document.getElementById('noticeText').focus();
+}
+
+async function analyze() {
+  hideError();
+
+  let userContent = [];
+  if (currentTab === 'text') {
+    const text = document.getElementById('noticeText').value.trim();
+    if (!text) { showError('Please paste your notice text first.'); return; }
+    userContent = [{ type: 'text', text: 'Here is my eviction notice:\n\n' + text }];
+  } else if (currentTab === 'image') {
+    if (!imageBase64) { showError('Please upload a photo of your notice first.'); return; }
+    userContent = [
+      { type: 'image', source: { type: 'base64', media_type: imageMediaType, data: imageBase64 } },
+      { type: 'text', text: 'This is a photo of my eviction notice. Please analyze it.' }
+    ];
+  } else {
+    const text = document.getElementById('describeText').value.trim();
+    if (!text) { showError('Please describe your notice first.'); return; }
+    userContent = [{ type: 'text', text: 'I am describing my eviction notice:\n\n' + text }];
+  }
+
+  document.getElementById('analyzeBtn').disabled = true;
+  document.getElementById('loadingCard').classList.add('show');
+  document.getElementById('results').classList.remove('show');
+
+  try {
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: userContent, lang: currentLang })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || 'Something went wrong (' + resp.status + ')');
+    }
+
+    const data = await resp.json();
+    fullResultText = data.result;
+    renderResults(data.result);
+  } catch (err) {
+    showError(err.message || 'Something went wrong. Please try again, or call 312-347-7600 for immediate help.');
+  } finally {
+    document.getElementById('analyzeBtn').disabled = false;
+    document.getElementById('loadingCard').classList.remove('show');
+  }
+}
+
+function parseSection(text, marker) {
+  const markers = ['NOTICE_TYPE','PLAIN_ENGLISH','DEADLINE','RIGHTS','DEFECT_STATUS','MISTAKES','DRAFT_LETTER','NEXT_STEPS'];
+  const start = text.indexOf('---' + marker + '---');
+  if (start === -1) return null;
+  const contentStart = text.indexOf('\n', start) + 1;
+  const idx = markers.indexOf(marker);
+  let end = text.length;
+  for (let i = idx + 1; i < markers.length; i++) {
+    const nx = text.indexOf('---' + markers[i] + '---');
+    if (nx !== -1 && nx < end) { end = nx; break; }
+  }
+  return text.slice(contentStart, end).trim();
+}
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderResults(text) {
+  const sections = {
+    noticeType: parseSection(text, 'NOTICE_TYPE'),
+    plainEnglish: parseSection(text, 'PLAIN_ENGLISH'),
+    deadline: parseSection(text, 'DEADLINE'),
+    rights: parseSection(text, 'RIGHTS'),
+    defect: parseSection(text, 'DEFECT_STATUS'),
+    mistakes: parseSection(text, 'MISTAKES'),
+    draft: parseSection(text, 'DRAFT_LETTER'),
+    nextSteps: parseSection(text, 'NEXT_STEPS'),
+  };
+
+  const isWarning = sections.defect && sections.defect.startsWith('WARNING');
+
+  let html = '';
+
+  if (sections.noticeType) html += `<div class="section-card"><div class="section-label red">🔴 Notice type</div><div class="section-body">${esc(sections.noticeType)}</div></div>`;
+  if (sections.plainEnglish) html += `<div class="section-card"><div class="section-label neutral">📋 What this means in plain English</div><div class="section-body">${esc(sections.plainEnglish)}</div></div>`;
+  if (sections.deadline) html += `<div class="section-card deadline-card"><div class="section-label red">⏰ Your deadline</div><div class="section-body">${esc(sections.deadline)}</div></div>`;
+  if (sections.rights) html += `<div class="section-card"><div class="section-label green">⚖️ Your rights</div><div class="section-body">${esc(sections.rights)}</div></div>`;
+
+  if (sections.defect) {
+    const content = sections.defect.replace(/^(WARNING|VALID)\n?/, '').trim();
+    const cls = isWarning ? 'amber' : 'green';
+    const icon = isWarning ? '⚠️ Potential legal defect detected' : '✓ Notice appears procedurally valid';
+    html += `<div class="section-card"><div class="section-label ${cls}">🔍 ${icon}</div><div class="section-body">${esc(content)}</div></div>`;
+  }
+
+  if (sections.mistakes) html += `<div class="section-card"><div class="section-label red">❌ The 3 biggest mistakes tenants make here</div><div class="section-body">${esc(sections.mistakes)}</div></div>`;
+
+  if (sections.draft) {
+    html += `<div class="section-card draft-card">
+      <div class="section-label dark">📝 Draft response letter</div>
+      <div class="section-body">${esc(sections.draft)}</div>
+      <button class="copy-btn" onclick="copyText(this, ${JSON.stringify(sections.draft)})">⎘ Copy letter</button>
+    </div>`;
+  }
+
+  if (sections.nextSteps) html += `<div class="section-card"><div class="section-label green">📞 Your next steps — do these in order</div><div class="section-body">${esc(sections.nextSteps)}</div></div>`;
+
+  html += `<div class="section-card">
+    <div class="section-label neutral">🆘 Free legal resources</div>
+    <div class="resources-grid">
+      <a class="resource-item" href="tel:3123477600"><div class="resource-name">Chicago Eviction Help Line</div><div class="resource-detail">312-347-7600</div></a>
+      <a class="resource-item" href="tel:7732924980"><div class="resource-name">Metropolitan Tenants Org.</div><div class="resource-detail">773-292-4980</div></a>
+      <a class="resource-item" href="https://legalaidchicago.org" target="_blank"><div class="resource-name">Legal Aid Chicago</div><div class="resource-detail">legalaidchicago.org</div></a>
+      <a class="resource-item" href="https://illinoislegalaid.org" target="_blank"><div class="resource-name">IL Legal Aid Online</div><div class="resource-detail">illinoislegalaid.org</div></a>
+    </div>
+  </div>`;
+
+  document.getElementById('resultsContent').innerHTML = html;
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘ Copy letter'; }, 2000);
+  });
+}
+
+function toggleReadAloud() {
+  const btn = document.getElementById('readAloudBtn');
+  if (isSpeaking) {
+    speechSynthesis.cancel();
+    isSpeaking = false;
+    btn.textContent = '🔊 Read aloud';
+    btn.classList.remove('speaking');
+    return;
+  }
+
+  const content = document.getElementById('resultsContent').innerText;
+  if (!content) return;
+
+  utterance = new SpeechSynthesisUtterance(content);
+  utterance.rate = 0.9;
+  utterance.lang = currentLang === 'es' ? 'es-US' : 'en-US';
+  utterance.onend = () => {
+    isSpeaking = false;
+    btn.textContent = '🔊 Read aloud';
+    btn.classList.remove('speaking');
+  };
+  speechSynthesis.speak(utterance);
+  isSpeaking = true;
+  btn.textContent = '⏹ Stop reading';
+  btn.classList.add('speaking');
+}
+
+function reset() {
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('noticeText').value = '';
+  document.getElementById('describeText').value = '';
+  document.getElementById('imagePreview').style.display = 'none';
+  imageBase64 = null;
+  fullResultText = '';
+  if (isSpeaking) { speechSynthesis.cancel(); isSpeaking = false; }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  const showing = links.style.display === 'flex';
+  links.style.display = showing ? 'none' : 'flex';
+  if (!showing) {
+    Object.assign(links.style, { flexDirection:'column', position:'absolute', top:'64px', left:'0', right:'0', background:'#0F0F0F', padding:'1rem', zIndex:'999' });
+  }
+}
+
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) handleImage({ target: { files: [file] } });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — 5Days</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.contact-form-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.contact-form-header {
+  background: var(--ink);
+  padding: 1.1rem 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contact-form-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+}
+
+.contact-form-body { padding: 1.6rem; }
+
+.contact-info-col { display: flex; flex-direction: column; gap: 1rem; }
+
+.contact-info-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.4rem;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.15s;
+  display: block;
+}
+
+.contact-info-card:hover { border-color: var(--red); }
+
+.contact-info-icon { font-size: 1.5rem; margin-bottom: 0.6rem; display: block; }
+.contact-info-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+.contact-info-desc { font-size: 0.83rem; color: var(--ink4); line-height: 1.55; margin-bottom: 0.4rem; }
+.contact-info-link { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--red); }
+
+.emergency-box {
+  background: var(--red);
+  color: white;
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.emergency-box h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+.emergency-box p { font-size: 0.84rem; opacity: 0.85; margin-bottom: 0.75rem; line-height: 1.55; }
+.emergency-box a { color: white; text-decoration: none; font-family: 'DM Mono', monospace; font-size: 0.8rem; display: block; margin-bottom: 0.35rem; }
+.emergency-box a:hover { opacity: 0.8; }
+
+.success-msg {
+  background: var(--green-pale);
+  border: 1px solid #BBF7D0;
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  color: var(--green);
+  font-size: 0.88rem;
+  display: none;
+  margin-top: 1rem;
+}
+
+.success-msg.show { display: block; }
+
+@media (max-width: 720px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">⏱</div>5Days</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="analyze.html">Analyze</a></li>
+    <li><a href="mycase.html">My Case</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li><a href="analyze.html" class="nav-cta">Get Help Now</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-tag">Contact</div>
+    <h1>Get in <span>touch.</span></h1>
+    <p>Questions about 5Days, feedback, or partnership inquiries. For legal emergencies, call the Chicago Eviction Help Line directly.</p>
+  </div>
+</div>
+
+<div class="main">
+  <div class="contact-grid">
+
+    <div class="contact-form-card">
+      <div class="contact-form-header">
+        <div class="step-badge">✉</div>
+        <h2>Send us a message</h2>
+      </div>
+      <div class="contact-form-body">
+        <div class="form-group">
+          <label>Your name</label>
+          <input type="text" id="contactName" placeholder="First and last name">
+        </div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="contactEmail" placeholder="you@email.com">
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select id="contactSubject">
+            <option value="">Select a topic...</option>
+            <option value="feedback">Feedback on 5Days</option>
+            <option value="bug">Report a bug or error</option>
+            <option value="partnership">Partnership or collaboration</option>
+            <option value="press">Press inquiry</option>
+            <option value="legal">Legal organization inquiry</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="contactMessage" placeholder="Tell us what's on your mind..." style="min-height:130px;"></textarea>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="submitForm()">Send message</button>
+        <div class="success-msg" id="successMsg">
+          ✓ Message received — we'll get back to you within 48 hours. If you need urgent legal help, please call the Chicago Eviction Help Line at 312-347-7600.
+        </div>
+        <p style="font-size:0.75rem; color:var(--ink4); margin-top:0.75rem; line-height:1.6;">5Days is not a law firm and cannot provide legal advice. For emergency legal help, contact the organizations listed on this page.</p>
+      </div>
+    </div>
+
+    <div class="contact-info-col">
+
+      <div class="emergency-box">
+        <h3>🚨 Facing eviction right now?</h3>
+        <p>Don't wait for a reply — call one of these free resources immediately. They can help.</p>
+        <a href="tel:3123477600">📞 Chicago Eviction Help Line: 312-347-7600</a>
+        <a href="tel:7732924980">📞 Metropolitan Tenants Org: 773-292-4980</a>
+        <a href="https://legalaidchicago.org" target="_blank">🌐 legalaidchicago.org</a>
+        <a href="https://illinoislegalaid.org" target="_blank">🌐 illinoislegalaid.org</a>
+      </div>
+
+      <a class="contact-info-card" href="analyze.html">
+        <span class="contact-info-icon">⏱</span>
+        <div class="contact-info-title">Analyze a notice</div>
+        <div class="contact-info-desc">Got an eviction notice? Go straight to our analyzer — no need to contact us first.</div>
+        <div class="contact-info-link">→ analyze.html</div>
+      </a>
+
+      <div class="contact-info-card">
+        <span class="contact-info-icon">🏛</span>
+        <div class="contact-info-title">Legal organization?</div>
+        <div class="contact-info-desc">If you work in tenant rights, legal aid, or housing advocacy and want to partner with 5Days or embed our tool, reach out through the form.</div>
+        <div class="contact-info-link">Use the form → subject: Legal organization</div>
+      </div>
+
+      <div class="contact-info-card">
+        <span class="contact-info-icon">🎓</span>
+        <div class="contact-info-title">Built at ALI Builds 2025</div>
+        <div class="contact-info-desc">5Days was created at a Chicago student hackathon. We're students, not lawyers. But we built something real — and we want to keep making it better.</div>
+        <div class="contact-info-link"><a href="about.html" style="color:var(--red); text-decoration:none;">Read the full story →</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="disclaimer" style="margin-top:2.5rem;">
+    <strong>Not legal advice.</strong> 5Days is a technology tool, not a law firm. We cannot provide legal advice, represent you in court, or create an attorney-client relationship. For legal emergencies, contact the Chicago Eviction Help Line at 312-347-7600 or Legal Aid Chicago at legalaidchicago.org.
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="margin-bottom:0.75rem; display:inline-flex;"><div class="nav-logo-icon">⏱</div>5Days</a>
+      <p>Tenant rights information for Chicago and Cook County. Free, always.</p>
+    </div>
+    <div class="footer-col"><h4>Tools</h4><ul><li><a href="analyze.html">Analyze a Notice</a></li><li><a href="mycase.html">Court Date Tracker</a></li><li><a href="mycase.html">Evidence Checklist</a></li></ul></div>
+    <div class="footer-col"><h4>Learn</h4><ul><li><a href="resources.html">Resources</a></li><li><a href="about.html">About 5Days</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Emergency</h4><ul><li><a href="tel:3123477600">Eviction Help Line</a></li><li><a href="https://legalaidchicago.org">Legal Aid Chicago</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 5Days · Built for <span>ALI Builds Hackathon</span></span>
+    <span>Not a law firm · Powered by Claude AI</span>
+  </div>
+</footer>
+
+<script>
+function submitForm() {
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+  if (!name || !email || !message) { alert('Please fill in your name, email, and message.'); return; }
+  document.getElementById('successMsg').classList.add('show');
+  document.getElementById('contactName').value = '';
+  document.getElementById('contactEmail').value = '';
+  document.getElementById('contactMessage').value = '';
+  document.getElementById('contactSubject').value = '';
+}
+
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  const showing = links.style.display === 'flex';
+  links.style.display = showing ? 'none' : 'flex';
+  if (!showing) Object.assign(links.style, { flexDirection:'column', position:'absolute', top:'64px', left:'0', right:'0', background:'#0F0F0F', padding:'1rem', zIndex:'999' });
+}
+</script>
+</body>
+</html>

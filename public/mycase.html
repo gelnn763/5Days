@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Case — 5Days</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.tabs-nav {
+  display: flex;
+  gap: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.tab-nav-btn {
+  flex: 1;
+  padding: 0.9rem 1rem;
+  border: none;
+  background: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink4);
+  cursor: pointer;
+  border-right: 1px solid var(--border);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tab-nav-btn:last-child { border-right: none; }
+.tab-nav-btn.active { background: var(--ink); color: var(--white); }
+.tab-nav-btn:hover:not(.active) { background: var(--paper2); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* COURT DATE TRACKER */
+.countdown-display {
+  background: var(--ink);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.015) 30px, rgba(255,255,255,0.015) 31px);
+}
+
+.countdown-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: #555;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+
+.countdown-number {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 5rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  position: relative;
+}
+
+.countdown-number.urgent { color: var(--red); animation: pulse 1s ease-in-out infinite; }
+.countdown-number.warning { color: var(--amber); }
+.countdown-number.ok { color: #AAA; }
+
+.countdown-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: #555;
+  margin-top: 0.5rem;
+  position: relative;
+}
+
+.court-date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.checklist-section { margin-top: 1.5rem; }
+
+.checklist-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checklist-progress {
+  background: var(--paper3);
+  border-radius: 4px;
+  height: 6px;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.checklist-bar {
+  height: 100%;
+  background: var(--green);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.checklist-item:hover { border-color: var(--ink3); }
+.checklist-item.checked { background: var(--green-pale); border-color: #BBF7D0; }
+
+.check-box {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  transition: all 0.15s;
+}
+
+.checklist-item.checked .check-box {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+  font-size: 11px;
+}
+
+.check-text { font-size: 0.88rem; line-height: 1.5; }
+.check-text strong { display: block; font-weight: 500; color: var(--ink); font-size: 0.88rem; }
+.check-text span { font-size: 0.78rem; color: var(--ink4); }
+
+.checklist-item.checked .check-text strong { color: var(--green); text-decoration: line-through; opacity: 0.7; }
+
+/* NOTICE TYPE SELECTOR */
+.notice-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.notice-type-btn {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--white);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.notice-type-btn:hover { border-color: var(--red); }
+.notice-type-btn.selected { border-color: var(--red); background: var(--red-pale); }
+
+.notice-type-name { font-size: 0.82rem; font-weight: 500; color: var(--ink); display: block; margin-bottom: 2px; }
+.notice-type-days { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--red); }
+
+/* COMMUNICATION LOG */
+.log-entry {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  animation: fadeUp 0.3s ease both;
+}
+
+.log-entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.log-entry-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.log-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--ink4);
+}
+
+.log-type-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.log-type-badge.verbal { background: var(--amber-pale); color: var(--amber); }
+.log-type-badge.written { background: var(--green-pale); color: var(--green); }
+.log-type-badge.text { background: #EFF6FF; color: #2563EB; }
+.log-type-badge.email { background: #F5F3FF; color: #7C3AED; }
+
+.log-delete {
+  background: none;
+  border: none;
+  color: var(--ink4);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.log-delete:hover { color: var(--red); background: var(--red-pale); }
+
+.log-note { font-size: 0.87rem; color: var(--ink2); line-height: 1.55; }
+.log-witnesses { font-size: 0.78rem; color: var(--ink4); margin-top: 0.3rem; font-style: italic; }
+
+.log-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--ink4);
+  font-size: 0.88rem;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.log-empty span { display: block; font-size: 2rem; margin-bottom: 0.75rem; }
+
+.print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.65rem 1.3rem;
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s;
+  margin-bottom: 1rem;
+}
+
+.print-btn:hover { background: #222; }
+
+@media (max-width: 600px) {
+  .court-date-row { grid-template-columns: 1fr; }
+  .tab-nav-btn { font-size: 0.78rem; gap: 4px; }
+  .countdown-number { font-size: 3.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">⏱</div>
+    5Days
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="analyze.html">Analyze</a></li>
+    <li><a href="mycase.html" class="active">My Case</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="analyze.html" class="nav-cta">Get Help Now</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-tag">My Case</div>
+    <h1>Track your case.<br><span>Stay one step ahead.</span></h1>
+    <p>Court date countdown, evidence checklist, and landlord communication log — all in one place. Your data stays in your browser only.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="tabs-nav">
+    <button class="tab-nav-btn active" onclick="switchTab('court')">📅 Court Tracker</button>
+    <button class="tab-nav-btn" onclick="switchTab('evidence')">📋 Evidence Checklist</button>
+    <button class="tab-nav-btn" onclick="switchTab('log')">📝 Communication Log</button>
+  </div>
+
+  <!-- COURT DATE TRACKER -->
+  <div class="tab-content active" id="tab-court">
+    <div class="card">
+      <div class="card-header"><div class="step-badge">1</div><h2>Set your court date</h2></div>
+      <div class="card-body">
+        <div class="court-date-row">
+          <div class="form-group">
+            <label>Court date</label>
+            <input type="date" id="courtDate" onchange="updateCountdown()">
+          </div>
+          <div class="form-group">
+            <label>Court time</label>
+            <input type="time" id="courtTime" value="09:00" onchange="updateCountdown()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Courtroom / location (optional)</label>
+          <input type="text" id="courtRoom" placeholder="e.g. Daley Center, Room 1301">
+        </div>
+        <div class="form-group">
+          <label>Case number (if known)</label>
+          <input type="text" id="caseNumber" placeholder="e.g. 24 M1 123456">
+        </div>
+      </div>
+    </div>
+
+    <div class="countdown-display" id="countdownDisplay">
+      <div class="countdown-label">Days until your court date</div>
+      <div class="countdown-number ok" id="countdownNum">—</div>
+      <div class="countdown-sub" id="countdownSub">Enter your court date above</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="step-badge">2</div><h2>What to bring to court</h2></div>
+      <div class="card-body">
+        <p style="font-size:0.88rem; color:var(--ink4); margin-bottom:1.25rem;">Check these off as you prepare. Arriving prepared is one of the biggest advantages a tenant can have.</p>
+        <div id="courtChecklist"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVIDENCE CHECKLIST -->
+  <div class="tab-content" id="tab-evidence">
+    <div class="card">
+      <div class="card-header"><div class="step-badge">1</div><h2>What type of notice did you receive?</h2></div>
+      <div class="card-body">
+        <p style="font-size:0.85rem; color:var(--ink4); margin-bottom:1rem;">Select your notice type to get a personalized evidence checklist.</p>
+        <div class="notice-type-grid">
+          <button class="notice-type-btn selected" onclick="setNoticeType('pay', this)">
+            <span class="notice-type-name">Pay or Quit</span>
+            <span class="notice-type-days">5-day notice</span>
+          </button>
+          <button class="notice-type-btn" onclick="setNoticeType('cure', this)">
+            <span class="notice-type-name">Cure or Quit</span>
+            <span class="notice-type-days">10-day notice</span>
+          </button>
+          <button class="notice-type-btn" onclick="setNoticeType('terminate', this)">
+            <span class="notice-type-name">Termination</span>
+            <span class="notice-type-days">30-day notice</span>
+          </button>
+          <button class="notice-type-btn" onclick="setNoticeType('illegal', this)">
+            <span class="notice-type-name">Illegal Activity</span>
+            <span class="notice-type-days">14-day notice</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="step-badge">2</div><h2>Your evidence checklist</h2></div>
+      <div class="card-body">
+        <div class="checklist-progress">
+          <div class="checklist-bar" id="evidenceBar" style="width:0%"></div>
+        </div>
+        <div id="evidenceChecklist"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMUNICATION LOG -->
+  <div class="tab-content" id="tab-log">
+    <div class="card">
+      <div class="card-header"><div class="step-badge">+</div><h2>Log a landlord interaction</h2></div>
+      <div class="card-body">
+        <div class="court-date-row">
+          <div class="form-group">
+            <label>Date of interaction</label>
+            <input type="date" id="logDate">
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select id="logType">
+              <option value="verbal">Verbal / in-person</option>
+              <option value="written">Written notice / letter</option>
+              <option value="text">Text message</option>
+              <option value="email">Email</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>What was said or what happened</label>
+          <textarea id="logNote" placeholder="Describe the interaction in detail. Include exact words if you remember them. Be specific about what was promised, threatened, or requested." style="min-height:100px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Witnesses present (if any)</label>
+          <input type="text" id="logWitnesses" placeholder="Names of anyone who heard or saw this">
+        </div>
+        <button class="btn btn-secondary" onclick="addLogEntry()">+ Add to log</button>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+      <h3 style="font-family:'Syne',sans-serif; font-weight:700; font-size:1rem;">Interaction log</h3>
+      <button class="print-btn" onclick="printLog()">🖨 Print log for court</button>
+    </div>
+    <div id="logEntries"></div>
+
+    <div class="disclaimer">
+      A written log of landlord communications is one of the most powerful tools you can bring to court. Courts take contemporaneous notes seriously. Log everything — even if it seems minor.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="margin-bottom:0.75rem; display:inline-flex;"><div class="nav-logo-icon">⏱</div>5Days</a>
+      <p>Tenant rights information for Chicago and Cook County. Free, always.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Tools</h4>
+      <ul>
+        <li><a href="analyze.html">Analyze a Notice</a></li>
+        <li><a href="mycase.html">Court Date Tracker</a></li>
+        <li><a href="mycase.html">Evidence Checklist</a></li>
+        <li><a href="mycase.html">Communication Log</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <ul>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="about.html">About 5Days</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Emergency</h4>
+      <ul>
+        <li><a href="tel:3123477600">Eviction Help Line</a></li>
+        <li><a href="https://legalaidchicago.org">Legal Aid Chicago</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 5Days · Built for <span>ALI Builds Hackathon</span></span>
+    <span>Not a law firm · Powered by Claude AI</span>
+  </div>
+</footer>
+
+<script>
+// TAB SWITCHING
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// COUNTDOWN
+function updateCountdown() {
+  const dateVal = document.getElementById('courtDate').value;
+  const timeVal = document.getElementById('courtTime').value || '09:00';
+  if (!dateVal) return;
+  const courtDt = new Date(dateVal + 'T' + timeVal);
+  const now = new Date();
+  const diff = Math.ceil((courtDt - now) / (1000 * 60 * 60 * 24));
+  const numEl = document.getElementById('countdownNum');
+  const subEl = document.getElementById('countdownSub');
+  numEl.textContent = Math.max(0, diff);
+  numEl.className = 'countdown-number ' + (diff <= 2 ? 'urgent' : diff <= 7 ? 'warning' : 'ok');
+  const dateStr = courtDt.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  const timeStr = courtDt.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+  subEl.textContent = diff <= 0 ? 'Your court date has passed' : `${dateStr} at ${timeStr}`;
+}
+
+// COURT CHECKLIST
+const courtItems = [
+  { text: 'Copy of your lease agreement', note: 'Bring all pages, including any addendums' },
+  { text: 'All rent receipts or payment records', note: 'Bank statements, money order stubs, Venmo/Zelle screenshots' },
+  { text: 'The original eviction notice', note: 'The document served to you — do not alter it' },
+  { text: 'All written communications with landlord', note: 'Texts, emails, letters — print them out' },
+  { text: 'Photos of the unit\'s condition', note: 'Especially if repairs or habitability are relevant' },
+  { text: 'Government-issued photo ID', note: 'Required to enter the courthouse' },
+  { text: 'Names and contact info of any witnesses', note: 'Anyone who can corroborate your account' },
+  { text: 'Notes on any verbal agreements', note: 'Dates, what was said, who was present' },
+  { text: 'Your communication log (printed)', note: 'From the 5Days Communication Log tool' },
+];
+
+function renderCourtChecklist() {
+  const el = document.getElementById('courtChecklist');
+  el.innerHTML = courtItems.map((item, i) => `
+    <div class="checklist-item" id="court-item-${i}" onclick="toggleCheck('court-item-${i}')">
+      <div class="check-box" id="court-box-${i}"></div>
+      <div class="check-text">
+        <strong>${item.text}</strong>
+        <span>${item.note}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCheck(id) {
+  const item = document.getElementById(id);
+  const checked = item.classList.toggle('checked');
+  const box = item.querySelector('.check-box');
+  box.textContent = checked ? '✓' : '';
+  updateEvidenceProgress();
+}
+
+// EVIDENCE CHECKLISTS
+let currentNoticeType = 'pay';
+
+const evidenceByType = {
+  pay: [
+    { text: 'Proof of rent payment', note: 'Receipts, bank statements, money order stubs — for the period claimed in the notice' },
+    { text: 'Proof of how notice was delivered', note: 'Was it slid under the door? Posted on the door? Mailed? Document the delivery method' },
+    { text: 'Lease agreement showing rent amount', note: 'To verify the amount claimed in the notice is correct' },
+    { text: 'Any written rent agreement or modification', note: 'Emails, texts, or letters where rent was renegotiated or a payment plan was agreed' },
+    { text: 'Photos of any repair issues', note: 'Chicago RLTO allows rent withholding for uninhabitable conditions — document them' },
+    { text: 'Record of any rent already accepted by landlord', note: 'If the landlord accepted partial rent after serving the notice, it may invalidate it' },
+    { text: 'Bank records showing available funds at time of notice', note: 'Useful if ability to pay is disputed' },
+    { text: 'Any government rental assistance documentation', note: 'ERAP, IHDA, or other assistance applications or approvals' },
+  ],
+  cure: [
+    { text: 'Documentation that the violation has been cured', note: 'Photos, receipts, written confirmation that you fixed the alleged issue' },
+    { text: 'Copy of the lease showing the alleged violated clause', note: 'To verify the landlord\'s interpretation is accurate' },
+    { text: 'Evidence the violation was the landlord\'s responsibility', note: 'Some "violations" are actually the landlord\'s duty to fix' },
+    { text: 'Written communications about the alleged violation', note: 'Prior warnings, your responses, any disputed facts' },
+    { text: 'Witness statements if relevant', note: 'Anyone who can testify about the alleged violation or your response' },
+    { text: 'Timeline of events', note: 'When you were notified, when you acted, when the notice was served' },
+  ],
+  terminate: [
+    { text: 'Proof of valid month-to-month or long-term tenancy', note: 'Your lease, payment history establishing tenancy' },
+    { text: 'Evidence of how the notice was served', note: 'Chicago RLTO requires specific service methods — improper service is a defense' },
+    { text: 'Any evidence of retaliatory motive', note: 'Did you recently request repairs, contact the city, or organize with other tenants?' },
+    { text: 'Rent payment history for the past 12 months', note: 'Demonstrates you are a reliable tenant' },
+    { text: 'Documentation of any requested repairs', note: 'Retaliation for repair requests is illegal under Chicago RLTO' },
+    { text: 'City building inspection records (if applicable)', note: 'If the city has cited the building, you may have extra protections' },
+  ],
+  illegal: [
+    { text: 'Evidence disputing the alleged activity', note: 'Anything that contradicts what the landlord claims happened' },
+    { text: 'Witness statements', note: 'Anyone who can corroborate your account of events' },
+    { text: 'Timeline of events with specific dates and times', note: 'Detailed contemporaneous records are your strongest asset' },
+    { text: 'Evidence of any relationship issues with landlord', note: 'Prior disputes, withheld security deposit, repair requests — context matters' },
+    { text: 'Police reports (if applicable)', note: 'If the incident involved law enforcement, get a copy of the report' },
+    { text: 'Character references or community standing', note: 'Letters from neighbors, employers, or community members' },
+  ]
+};
+
+function setNoticeType(type, btn) {
+  currentNoticeType = type;
+  document.querySelectorAll('.notice-type-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  renderEvidenceChecklist();
+}
+
+function renderEvidenceChecklist() {
+  const items = evidenceByType[currentNoticeType];
+  const el = document.getElementById('evidenceChecklist');
+  el.innerHTML = items.map((item, i) => `
+    <div class="checklist-item" id="ev-item-${i}" onclick="toggleEvidence(${i})">
+      <div class="check-box" id="ev-box-${i}"></div>
+      <div class="check-text">
+        <strong>${item.text}</strong>
+        <span>${item.note}</span>
+      </div>
+    </div>
+  `).join('');
+  updateEvidenceProgress();
+}
+
+function toggleEvidence(i) {
+  const item = document.getElementById('ev-item-' + i);
+  const checked = item.classList.toggle('checked');
+  document.getElementById('ev-box-' + i).textContent = checked ? '✓' : '';
+  updateEvidenceProgress();
+}
+
+function updateEvidenceProgress() {
+  const items = evidenceByType[currentNoticeType];
+  const checked = document.querySelectorAll('#evidenceChecklist .checklist-item.checked').length;
+  const pct = items.length > 0 ? Math.round((checked / items.length) * 100) : 0;
+  const bar = document.getElementById('evidenceBar');
+  if (bar) bar.style.width = pct + '%';
+}
+
+// COMMUNICATION LOG
+let logEntries = [];
+
+function addLogEntry() {
+  const date = document.getElementById('logDate').value;
+  const type = document.getElementById('logType').value;
+  const note = document.getElementById('logNote').value.trim();
+  const witnesses = document.getElementById('logWitnesses').value.trim();
+  if (!date || !note) { alert('Please fill in the date and describe what happened.'); return; }
+  logEntries.unshift({ id: Date.now(), date, type, note, witnesses });
+  document.getElementById('logNote').value = '';
+  document.getElementById('logWitnesses').value = '';
+  renderLog();
+}
+
+function deleteEntry(id) {
+  logEntries = logEntries.filter(e => e.id !== id);
+  renderLog();
+}
+
+function renderLog() {
+  const el = document.getElementById('logEntries');
+  if (logEntries.length === 0) {
+    el.innerHTML = `<div class="log-empty"><span>📋</span>No interactions logged yet.<br>Add your first entry above.</div>`;
+    return;
+  }
+  el.innerHTML = logEntries.map(entry => {
+    const d = new Date(entry.date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+    return `<div class="log-entry">
+      <div class="log-entry-header">
+        <div class="log-entry-meta">
+          <span class="log-date">${d}</span>
+          <span class="log-type-badge ${entry.type}">${entry.type}</span>
+        </div>
+        <button class="log-delete" onclick="deleteEntry(${entry.id})">✕</button>
+      </div>
+      <div class="log-note">${entry.note.replace(/\n/g, '<br>')}</div>
+      ${entry.witnesses ? `<div class="log-witnesses">Witnesses: ${entry.witnesses}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function printLog() {
+  if (logEntries.length === 0) { alert('No log entries to print.'); return; }
+  const rows = logEntries.map(e => {
+    const d = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+    return `<tr><td>${d}</td><td>${e.type}</td><td>${e.note}</td><td>${e.witnesses || '—'}</td></tr>`;
+  }).join('');
+  const courtDate = document.getElementById('courtDate').value;
+  const caseNum = document.getElementById('caseNumber').value;
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>5Days — Communication Log</title>
+  <style>body{font-family:serif;max-width:800px;margin:2rem auto;padding:1rem;}h1{font-size:1.4rem;margin-bottom:0.25rem;}
+  .meta{color:#666;font-size:0.85rem;margin-bottom:1.5rem;}table{width:100%;border-collapse:collapse;}
+  th{background:#111;color:white;padding:8px 12px;text-align:left;font-size:0.8rem;}
+  td{padding:8px 12px;border-bottom:1px solid #ddd;font-size:0.85rem;vertical-align:top;}
+  .footer{margin-top:2rem;font-size:0.75rem;color:#999;border-top:1px solid #ddd;padding-top:1rem;}
+  </style></head><body>
+  <h1>Landlord Communication Log</h1>
+  <div class="meta">${courtDate ? 'Court date: ' + new Date(courtDate+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) + ' · ' : ''}${caseNum ? 'Case #' + caseNum : ''}</div>
+  <table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Witnesses</th></tr></thead>
+  <tbody>${rows}</tbody></table>
+  <div class="footer">Generated by 5Days (5days.app) · This log is for informational purposes only and does not constitute legal advice.</div>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  const showing = links.style.display === 'flex';
+  links.style.display = showing ? 'none' : 'flex';
+  if (!showing) Object.assign(links.style, { flexDirection:'column', position:'absolute', top:'64px', left:'0', right:'0', background:'#0F0F0F', padding:'1rem', zIndex:'999' });
+}
+
+// INIT
+renderCourtChecklist();
+renderEvidenceChecklist();
+renderLog();
+document.getElementById('logDate').valueAsDate = new Date();
+</script>
+</body>
+</html>

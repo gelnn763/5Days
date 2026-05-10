@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5Days — Know Your Rights Before the Clock Runs Out</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* HOME-SPECIFIC */
+.hero-home { padding: 6rem 2rem 5rem; }
+
+.clock-ring {
+  width: 120px;
+  height: 120px;
+  border: 3px solid #1A1A1A;
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clock-ring::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--red);
+  animation: spin 3s linear infinite;
+}
+
+.clock-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2.8rem;
+  color: var(--red);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.clock-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: #555;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+}
+
+/* HOW IT WORKS */
+.hiw-section {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  padding: 5rem 2rem;
+}
+
+.hiw-inner { max-width: 1000px; margin: 0 auto; }
+
+.section-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--red);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+
+.section-sub {
+  color: var(--ink4);
+  font-size: 0.95rem;
+  max-width: 500px;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+.hiw-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.hiw-step {
+  background: var(--paper);
+  padding: 2rem 1.75rem;
+  position: relative;
+}
+
+.hiw-step-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 3.5rem;
+  color: var(--paper3);
+  line-height: 1;
+  margin-bottom: 1rem;
+  letter-spacing: -0.05em;
+}
+
+.hiw-step h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.hiw-step p {
+  font-size: 0.85rem;
+  color: var(--ink4);
+  line-height: 1.65;
+}
+
+.hiw-step-icon {
+  position: absolute;
+  top: 1.75rem;
+  right: 1.75rem;
+  font-size: 1.4rem;
+  opacity: 0.6;
+}
+
+/* ASYMMETRY SECTION */
+.asym-section {
+  background: var(--ink);
+  padding: 5rem 2rem;
+  color: var(--white);
+}
+
+.asym-inner { max-width: 1000px; margin: 0 auto; }
+
+.asym-grid {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 0;
+  margin-top: 2.5rem;
+  border: 1px solid #1E1E1E;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.asym-col {
+  padding: 2rem;
+}
+
+.asym-col.landlord { background: #0A0A0A; }
+.asym-col.tenant { background: #111; }
+
+.asym-col h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.asym-col.landlord h3 { color: #444; }
+.asym-col.tenant h3 { color: var(--red); }
+
+.asym-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 0.85rem;
+  font-size: 0.88rem;
+  color: #777;
+  line-height: 1.5;
+}
+
+.asym-item.have { color: #AAA; }
+
+.asym-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #333;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+.asym-dot.red { background: var(--red); }
+
+.asym-vs {
+  background: #0F0F0F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #333;
+  border-left: 1px solid #1A1A1A;
+  border-right: 1px solid #1A1A1A;
+}
+
+/* CASE STUDY */
+.case-section {
+  background: var(--paper);
+  padding: 5rem 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.case-inner { max-width: 1000px; margin: 0 auto; }
+
+.case-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.case-notice {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.case-notice-header {
+  background: var(--paper2);
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--ink4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notice-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+
+.case-notice-body {
+  padding: 1.5rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.9;
+  color: var(--ink3);
+  white-space: pre-line;
+}
+
+.case-notice-body strong { color: var(--ink); }
+
+.case-output { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.case-chip {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.case-chip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+.case-chip-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--ink4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.case-chip-value {
+  font-size: 0.85rem;
+  color: var(--ink);
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.case-chip-value.red { color: var(--red); font-family: 'Syne', sans-serif; font-weight: 700; }
+.case-chip-value.green { color: var(--green); }
+.case-chip-value.amber { color: var(--amber); }
+
+.case-cta {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* STATS SECTION */
+.stats-section {
+  background: var(--red);
+  padding: 4rem 2rem;
+  color: var(--white);
+}
+
+.stats-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.stats-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  letter-spacing: -0.04em;
+  display: block;
+  line-height: 1;
+}
+
+.stats-label {
+  font-size: 0.78rem;
+  opacity: 0.75;
+  margin-top: 6px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+/* CTA SECTION */
+.cta-section {
+  background: var(--ink);
+  padding: 5rem 2rem;
+  text-align: center;
+  color: var(--white);
+}
+
+.cta-section h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+.cta-section h2 span { color: var(--red); }
+
+.cta-section p {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .hiw-steps { grid-template-columns: 1fr; }
+  .asym-grid { grid-template-columns: 1fr; }
+  .asym-vs { display: none; }
+  .case-grid { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">⏱</div>
+    5Days
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="analyze.html">Analyze</a></li>
+    <li><a href="mycase.html">My Case</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="analyze.html" class="nav-cta">Get Help Now</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="hero hero-home">
+  <div class="clock-ring">
+    <div>
+      <div class="clock-num" id="heroCount">5</div>
+      <div class="clock-sub">days left</div>
+    </div>
+  </div>
+  <div class="hero-eyebrow">Chicago Tenant Rights Tool</div>
+  <h1>The clock is ticking.<br><span>Now you know what to do.</span></h1>
+  <p class="hero-sub">Paste your eviction notice. 5Days decodes it, checks it for legal defects under Illinois law and the Chicago RLTO, and tells you exactly what to do — in under 60 seconds. Free, always.</p>
+  <div class="hero-btns">
+    <a href="analyze.html" class="btn btn-primary">⏱ Analyze My Notice</a>
+    <a href="#see-it-work" class="btn btn-outline" style="color:white; border-color:#333;">See it in action</a>
+  </div>
+  <div class="stat-bar">
+    <div class="stat">
+      <span class="stat-num">23,000+</span>
+      <span class="stat-label">Chicago evictions filed in 2023</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">5 days</span>
+      <span class="stat-label">How fast the clock starts</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">Free</span>
+      <span class="stat-label">Always. No signup needed.</span>
+    </div>
+  </div>
+</div>
+
+<!-- CASE STUDY — moved up so it's the first thing after the hero -->
+<div class="case-section" id="see-it-work">
+  <div class="case-inner">
+    <div class="section-eyebrow">See it work</div>
+    <h2 class="section-title">Notice in. Action plan out.</h2>
+    <p class="section-sub">A real 5-Day Notice to Pay or Quit — run through 5Days. Notice the defect it catches.</p>
+    <div class="case-grid">
+      <div class="case-notice">
+        <div class="case-notice-header">
+          <div class="notice-dot"></div>
+          Sample eviction notice · Chicago, IL
+        </div>
+        <div class="case-notice-body"><strong>5-DAY NOTICE TO PAY RENT OR QUIT</strong>
+
+To: Maria Gonzalez
+   2847 W. Cermak Rd, Apt 3B
+   Chicago, IL 60608
+
+You are hereby notified that there is now due and owing from you to the undersigned landlord the sum of <strong>$1,150.00</strong> for rent of the premises located at the above address for the period of <strong>October 1–31, 2024</strong>.
+
+You are further notified that payment of said sum must be made within <strong>FIVE (5) DAYS</strong> of service of this notice or you must quit and deliver up possession of said premises.
+
+Dated: October 3, 2024
+R. Sterns Properties LLC</div>
+      </div>
+
+      <div class="case-output">
+        <div class="case-chip fade-up fade-up-1">
+          <div class="case-chip-icon">🔴</div>
+          <div>
+            <div class="case-chip-label">Notice type</div>
+            <div class="case-chip-value">5-Day Notice to Pay Rent or Quit</div>
+          </div>
+        </div>
+        <div class="case-chip fade-up fade-up-2">
+          <div class="case-chip-icon">⏰</div>
+          <div>
+            <div class="case-chip-label">Deadline</div>
+            <div class="case-chip-value red">October 9, 2024 — 6 days from now</div>
+          </div>
+        </div>
+        <div class="case-chip fade-up fade-up-3">
+          <div class="case-chip-icon">⚠️</div>
+          <div>
+            <div class="case-chip-label">Potential defect detected</div>
+            <div class="case-chip-value amber">Notice not signed by individual agent as required by Chicago RLTO §5-12-130. This may be a valid defense — bring to legal aid immediately.</div>
+          </div>
+        </div>
+        <div class="case-chip fade-up fade-up-4">
+          <div class="case-chip-icon">⚖️</div>
+          <div>
+            <div class="case-chip-label">Key right</div>
+            <div class="case-chip-value green">Under Chicago RLTO, you have the right to pay rent in full within the 5-day period and the eviction proceeding must stop.</div>
+          </div>
+        </div>
+        <div class="case-cta">
+          <a href="analyze.html" class="btn btn-primary" style="font-size:0.88rem; padding: 0.65rem 1.2rem;">Analyze your own notice →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="hiw-section" id="how-it-works">
+  <div class="hiw-inner">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-title">Three steps. Under 60 seconds.</h2>
+    <p class="section-sub">No legal knowledge required. No signup. No cost.</p>
+    <div class="hiw-steps">
+      <div class="hiw-step fade-up fade-up-1">
+        <div class="hiw-step-icon">📄</div>
+        <div class="hiw-step-num">01</div>
+        <h3>Upload your notice</h3>
+        <p>Paste the text, photograph the document, or describe what it says in your own words — even in Spanish.</p>
+      </div>
+      <div class="hiw-step fade-up fade-up-2">
+        <div class="hiw-step-icon">⚖️</div>
+        <div class="hiw-step-num">02</div>
+        <h3>We decode it</h3>
+        <p>5Days checks your notice against Illinois law and the Chicago RLTO — including looking for procedural defects that could be a complete legal defense.</p>
+      </div>
+      <div class="hiw-step fade-up fade-up-3">
+        <div class="hiw-step-icon">📋</div>
+        <div class="hiw-step-num">03</div>
+        <h3>Get your action plan</h3>
+        <p>You receive your deadline, your rights, a draft response letter, and exactly what to do next — in plain English.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THE ASYMMETRY -->
+<div class="asym-section">
+  <div class="asym-inner">
+    <div class="section-eyebrow" style="color:var(--red);">The unfair advantage</div>
+    <h2 class="section-title" style="color:white;">Your landlord has a playbook.<br>You deserve one too.</h2>
+    <div class="asym-grid">
+      <div class="asym-col landlord">
+        <h3>What your landlord has</h3>
+        <div class="asym-item have"><div class="asym-dot"></div>A property attorney on retainer</div>
+        <div class="asym-item have"><div class="asym-dot"></div>Boilerplate notices drafted by lawyers</div>
+        <div class="asym-item have"><div class="asym-dot"></div>Knowledge of exactly which defenses to pre-empt</div>
+        <div class="asym-item have"><div class="asym-dot"></div>Experience with Cook County eviction court</div>
+        <div class="asym-item have"><div class="asym-dot"></div>Time on their side while you're scared</div>
+      </div>
+      <div class="asym-vs">VS</div>
+      <div class="asym-col tenant">
+        <h3>What 5Days gives you</h3>
+        <div class="asym-item have"><div class="asym-dot red"></div>Plain-English explanation of your notice</div>
+        <div class="asym-item have"><div class="asym-dot red"></div>Illinois RLTO rights specific to your situation</div>
+        <div class="asym-item have"><div class="asym-dot red"></div>Automatic check for procedural defects</div>
+        <div class="asym-item have"><div class="asym-dot red"></div>A draft response letter ready to send</div>
+        <div class="asym-item have"><div class="asym-dot red"></div>Exactly what to do in the next 48 hours</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="fade-up fade-up-1">
+      <span class="stats-num">23,000+</span>
+      <div class="stats-label">Eviction cases filed in Chicago in 2023</div>
+    </div>
+    <div class="fade-up fade-up-2">
+      <span class="stats-num">$0</span>
+      <div class="stats-label">Cost to use 5Days, always</div>
+    </div>
+    <div class="fade-up fade-up-3">
+      <span class="stats-num">60sec</span>
+      <div class="stats-label">Average time to get a full analysis</div>
+    </div>
+    <div class="fade-up fade-up-4">
+      <span class="stats-num">IL+CHI</span>
+      <div class="stats-label">Grounded in Illinois law and the Chicago RLTO</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Don't let the clock<br>run out on <span>your rights.</span></h2>
+  <p>Free. No account. No lawyers needed. Just answers.</p>
+  <a href="analyze.html" class="btn btn-primary" style="font-size:1.05rem; padding: 0.9rem 2rem;">⏱ Analyze My Notice Now</a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="margin-bottom:0.75rem; display:inline-flex;">
+        <div class="nav-logo-icon">⏱</div>
+        5Days
+      </a>
+      <p>Tenant rights information for Chicago and Cook County. Free, always.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Tools</h4>
+      <ul>
+        <li><a href="analyze.html">Analyze a Notice</a></li>
+        <li><a href="mycase.html">Court Date Tracker</a></li>
+        <li><a href="mycase.html">Evidence Checklist</a></li>
+        <li><a href="mycase.html">Communication Log</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <ul>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="resources.html#faq">FAQ</a></li>
+        <li><a href="about.html">About 5Days</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="contact.html">Get in Touch</a></li>
+        <li><a href="tel:3123477600">Eviction Help Line</a></li>
+        <li><a href="https://legalaidchicago.org" target="_blank">Legal Aid Chicago</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 5Days · Built for <span>ALI Builds Hackathon</span> · Chicago, IL</span>
+    <span>Not a law firm · Powered by Claude AI</span>
+  </div>
+</footer>
+
+<script>
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+  links.style.flexDirection = 'column';
+  links.style.position = 'absolute';
+  links.style.top = '64px';
+  links.style.left = '0';
+  links.style.right = '0';
+  links.style.background = '#0F0F0F';
+  links.style.padding = '1rem';
+  links.style.zIndex = '999';
+}
+
+// Animate clock countdown
+let count = 5;
+setInterval(() => {
+  count = count <= 1 ? 5 : count - 1;
+  const el = document.getElementById('heroCount');
+  if (el) {
+    el.style.transform = 'scale(1.15)';
+    el.style.transition = 'transform 0.1s';
+    setTimeout(() => {
+      el.textContent = count;
+      el.style.transform = 'scale(1)';
+    }, 150);
+  }
+}, 2000);
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — 5Days</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.about-lead {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1.75rem;
+}
+
+.about-body {
+  font-size: 0.95rem;
+  color: var(--ink3);
+  line-height: 1.8;
+  max-width: 640px;
+}
+
+.about-body p { margin-bottom: 1.25rem; }
+
+.about-body strong { color: var(--ink); font-weight: 500; }
+
+.pull-quote {
+  background: var(--ink);
+  color: var(--white);
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin: 2.5rem 0;
+  position: relative;
+}
+
+.pull-quote::before {
+  content: '"';
+  font-family: 'Syne', sans-serif;
+  font-size: 6rem;
+  color: var(--red);
+  opacity: 0.3;
+  position: absolute;
+  top: -0.5rem;
+  left: 1.5rem;
+  line-height: 1;
+}
+
+.pull-quote-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.pull-quote-source {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: #555;
+  margin-top: 1rem;
+  letter-spacing: 0.06em;
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.mission-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.mission-card-icon { font-size: 1.5rem; margin-bottom: 0.75rem; display: block; }
+.mission-card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; }
+.mission-card-desc { font-size: 0.84rem; color: var(--ink4); line-height: 1.6; }
+
+.built-with {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.built-with h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 1rem; }
+.tech-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.tech-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  padding: 5px 12px;
+  background: var(--ink);
+  color: #AAA;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+
+.disclaimer-big {
+  background: var(--red-pale);
+  border: 1px solid var(--red-pale2);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.disclaimer-big h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--red-dark); margin-bottom: 0.5rem; }
+.disclaimer-big p { font-size: 0.84rem; color: var(--red-dark); line-height: 1.65; opacity: 0.85; }
+
+@media (max-width: 600px) {
+  .mission-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">⏱</div>5Days</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="analyze.html">Analyze</a></li>
+    <li><a href="mycase.html">My Case</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="analyze.html" class="nav-cta">Get Help Now</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-tag">About 5Days</div>
+    <h1>Why we built this.</h1>
+    <p>The story behind 5Days and the problem it's trying to fix.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <p class="about-lead">5Days is grounded in two specific laws: the Chicago Residential Landlord and Tenant Ordinance — one of the strongest tenant protection laws in the country — and the Illinois Eviction Act. Most tenants facing eviction have never heard of either. That's the gap we're closing.</p>
+
+  <div class="about-body">
+    <p>When a landlord serves an eviction notice in Illinois, the clock starts immediately. A 5-day notice means five days. Not business days. Not days until you can get a lawyer. Five calendar days from when the notice was served — after which the landlord can file in court.</p>
+
+    <p>The landlord knows exactly what that notice means. They have property attorneys who draft these documents, who know which defenses to pre-empt, and who have been through eviction court many times. The tenant often has none of that. They have a piece of paper, a deadline they may not fully understand, and fear.</p>
+
+    <p><strong>That asymmetry — of knowledge, access, and time — is the problem 5Days was built to address.</strong></p>
+
+    <p>We built a tool that reads eviction notices the way a lawyer would, checks them against the Chicago RLTO and Illinois eviction statutes, flags procedural defects that could be valid legal defenses, and tells tenants exactly what to do next — in plain English, in under 60 seconds, for free.</p>
+
+    <p>We are not lawyers. 5Days is not a law firm and does not provide legal advice. But we believe that access to legal <em>information</em> — understanding what your notice means, what your rights are, and who to call — should not be a privilege reserved for people who can afford an attorney.</p>
+  </div>
+
+  <div class="pull-quote">
+    <div class="pull-quote-text">Every system has hidden cheat codes — knowledge, access, networks, language, capital. Some people have them. Others don't. 5Days is a cheat code for the people who don't.</div>
+    <div class="pull-quote-source">— The mission behind 5Days</div>
+  </div>
+
+  <div class="mission-grid">
+    <div class="mission-card">
+      <span class="mission-card-icon">⚖️</span>
+      <div class="mission-card-title">Grounded in real law</div>
+      <div class="mission-card-desc">5Days is specifically trained on the Chicago RLTO and Illinois eviction statutes — not generic legal information. Your rights in Chicago are stronger than you think.</div>
+    </div>
+    <div class="mission-card">
+      <span class="mission-card-icon">🔍</span>
+      <div class="mission-card-title">Defect detection</div>
+      <div class="mission-card-desc">Many eviction notices have procedural errors that tenants never catch. A defective notice can be a complete defense. We check every notice automatically.</div>
+    </div>
+    <div class="mission-card">
+      <span class="mission-card-icon">🌎</span>
+      <div class="mission-card-title">Built for everyone</div>
+      <div class="mission-card-desc">Works in English and Spanish. Accepts photos for people who can't type their notice. No account, no signup, no cost. Built for the people who need it most.</div>
+    </div>
+    <div class="mission-card">
+      <span class="mission-card-icon">⏱</span>
+      <div class="mission-card-title">Speed is everything</div>
+      <div class="mission-card-desc">When you have 5 days, you don't have time to schedule a consultation. 5Days gives you answers in under 60 seconds so you can act immediately.</div>
+    </div>
+  </div>
+
+  <div class="built-with">
+    <h3>Built with</h3>
+    <div class="tech-list">
+      <span class="tech-chip">Claude AI (Anthropic)</span>
+      <span class="tech-chip">HTML / CSS / JS</span>
+      <span class="tech-chip">Illinois RLTO</span>
+      <span class="tech-chip">Chicago Municipal Code Ch. 5-12</span>
+      <span class="tech-chip">735 ILCS 5/9</span>
+      <span class="tech-chip">Browser Speech Synthesis API</span>
+      <span class="tech-chip">Vision / Image Analysis</span>
+    </div>
+  </div>
+
+  <div class="disclaimer-big">
+    <h3>Important: 5Days is not a law firm</h3>
+    <p>5Days provides legal information, not legal advice. Nothing on this website creates an attorney-client relationship. The information provided is for general informational purposes only and may not reflect the most current legal developments. Always consult with a licensed Illinois attorney or contact a legal aid organization before taking action in your eviction case. If you are facing eviction, please also contact the Chicago Eviction Help Line at 312-347-7600.</p>
+  </div>
+
+  <div style="margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+    <div class="section-eyebrow" style="font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--red); letter-spacing:0.14em; text-transform:uppercase; margin-bottom:0.75rem;">Built at ALI Builds 2025</div>
+    <p style="font-size:0.88rem; color:var(--ink4); line-height:1.7;">5Days was built in 24 hours at ALI Builds, a beginner-friendly Chicago hackathon focused on social impact. The prompt: <em>"Every system has hidden cheat codes. Some people have them. Others don't."</em> We chose tenants facing eviction. We hope this is useful long after the hackathon ends.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="margin-bottom:0.75rem; display:inline-flex;"><div class="nav-logo-icon">⏱</div>5Days</a>
+      <p>Tenant rights information for Chicago and Cook County. Free, always.</p>
+    </div>
+    <div class="footer-col"><h4>Tools</h4><ul><li><a href="analyze.html">Analyze a Notice</a></li><li><a href="mycase.html">Court Date Tracker</a></li><li><a href="mycase.html">Evidence Checklist</a></li></ul></div>
+    <div class="footer-col"><h4>Learn</h4><ul><li><a href="resources.html">Resources</a></li><li><a href="about.html">About 5Days</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Emergency</h4><ul><li><a href="tel:3123477600">Eviction Help Line</a></li><li><a href="https://legalaidchicago.org">Legal Aid Chicago</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 5Days · Built for <span>ALI Builds Hackathon</span></span>
+    <span>Not a law firm · Powered by Claude AI</span>
+  </div>
+</footer>
+
+<script>
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  const showing = links.style.display === 'flex';
+  links.style.display = showing ? 'none' : 'flex';
+  if (!showing) Object.assign(links.style, { flexDirection:'column', position:'absolute', top:'64px', left:'0', right:'0', background:'#0F0F0F', padding:'1rem', zIndex:'999' });
+}
+</script>
+</body>
+</html>
