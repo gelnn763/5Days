@@ -6,8 +6,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json({ limit: "10mb" })); // allow image uploads
-app.use(express.static("public"));        // serve the 5Days frontend
+app.use(express.json({ limit: "10mb" }));
+app.use(express.static("public"));
 
 const SYSTEM_PROMPT = `You are 5Days, a specialized legal document decoder for renters in Chicago and Cook County, Illinois. You are not a lawyer and do not provide legal advice, but you are deeply knowledgeable about:
 - Illinois Residential Tenants Act (ILCS Chapter 765, Acts 710–735)
@@ -30,39 +30,37 @@ Respond ONLY in this exact format:
 [3–6 specific rights, numbered list. Cite law by name where confident.]
 
 ---DEFECT_STATUS---
-[First line: "VALID" or "WARNING". Then explain. Check: notice period, signature, RLTO language, service method, address, math errors. If WARNING say "⚠️ POTENTIAL DEFECT:" then describe.]
+[First line: "VALID" or "WARNING". Then explain defects like notice period, signature, RLTO language, service method, address, math errors.]
 
 ---MISTAKES---
 [3 or more numbered mistakes tenants commonly make in this situation.]
 
 ---DRAFT_LETTER---
-[Professional letter with [TENANT NAME], [DATE], [ADDRESS] placeholders. Firm but non-confrontational.]
+[Professional letter with placeholders like [TENANT NAME], [DATE], [ADDRESS].]
 
 ---NEXT_STEPS---
-[Numbered checklist. Always end with:
-• Chicago Eviction Help Line: 312-347-7600
-• Metropolitan Tenants Organization: 773-292-4980
-• Legal Aid Chicago: legalaidchicago.org
-• Cook County Self-Help: cookcountycourt.org/selfhelp
-• Illinois Legal Aid Online: illinoislegalaid.org]
+[Numbered checklist. Always end with Chicago legal aid contacts.]
 
-RULES: Never skip a section. Never invent statute numbers. Never say a case is hopeless. Never say to ignore a notice or miss court. Treat the user with dignity — they are likely scared.`;
+RULES: Never skip a section. Never invent statute numbers. Never tell users to ignore notices. Be calm and supportive.`;
 
-const SYSTEM_PROMPT_ES = SYSTEM_PROMPT + `\n\nIMPORTANT: The user has selected Spanish. Respond in Spanish for all section content, while keeping the ---SECTION--- markers in English exactly as shown.`;
+const SYSTEM_PROMPT_ES = SYSTEM_PROMPT + `\n\nIMPORTANT: Respond in Spanish for all content sections.`;
 
-// Rate limiting — simple in-memory store
+// Simple rate limit
 const requestCounts = new Map();
-const RATE_LIMIT = 20; // requests per hour per IP
-const RATE_WINDOW = 60 * 60 * 1000; // 1 hour in ms
+const RATE_LIMIT = 20;
+const RATE_WINDOW = 60 * 60 * 1000;
 
 function checkRateLimit(ip) {
   const now = Date.now();
   const record = requestCounts.get(ip);
+
   if (!record || now - record.windowStart > RATE_WINDOW) {
     requestCounts.set(ip, { count: 1, windowStart: now });
     return true;
   }
+
   if (record.count >= RATE_LIMIT) return false;
+
   record.count++;
   return true;
 }
@@ -72,13 +70,13 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", service: "5Days API" });
 });
 
-// Main analysis endpoint
+// MAIN ANALYZE ENDPOINT (FREE AI VERSION)
 app.post("/api/analyze", async (req, res) => {
   const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
   if (!checkRateLimit(ip)) {
     return res.status(429).json({
-      error: "Too many requests. Please try again in an hour, or contact the Chicago Eviction Help Line directly at 312-347-7600."
+      error: "Too many requests. Try again later."
     });
   }
 
@@ -88,34 +86,53 @@ app.post("/api/analyze", async (req, res) => {
     return res.status(400).json({ error: "No notice content provided." });
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-  console.error("Missing ANTHROPIC_API_KEY");
+  if (!process.env.OPENROUTER_API_KEY) {
+    return res.status(500).json({
+      error: "Server missing OPENROUTER_API_KEY"
+    });
   }
 
   try {
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-    const message = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 2000,
-      system: lang === "es" ? SYSTEM_PROMPT_ES : SYSTEM_PROMPT,
-      messages: [{ role: "user", content }],
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://localhost",
+        "X-Title": "5Days"
+      },
+      body: JSON.stringify({
+        model: "meta-llama/llama-3.1-8b-instruct:free",
+        messages: [
+          {
+            role: "system",
+            content: lang === "es" ? SYSTEM_PROMPT_ES : SYSTEM_PROMPT
+          },
+          {
+            role: "user",
+            content: JSON.stringify(content)
+          }
+        ]
+      })
     });
 
-    const text = message.content.map(b => b.type === "text" ? b.text : "").join("");
-    res.json({ result: text });
+    const data = await response.json();
+
+    if (!data.choices?.[0]?.message?.content) {
+      console.error("OpenRouter error:", data);
+      return res.status(500).json({
+        error: "AI failed to generate response."
+      });
+    }
+
+    res.json({ result: data.choices[0].message.content });
 
   } catch (err) {
-    console.error("Anthropic API error:", err.message);
+    console.error("Server error:", err);
 
-    if (err.status === 401) {
-      return res.status(500).json({ error: "API authentication failed. Please contact the administrator." });
-    }
-    if (err.status === 429) {
-      return res.status(429).json({ error: "Service is temporarily busy. Please try again in a moment." });
-    }
-
-    res.status(500).json({ error: "Analysis failed. Please try again, or call 312-347-7600 for immediate help." });
+    res.status(500).json({
+      error: "Analysis failed. Please try again."
+    });
   }
 });
 
