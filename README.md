@@ -90,8 +90,8 @@ Many eviction notices have procedural errors. Common ones include:
 | Layer | Technology |
 |---|---|
 | Frontend | HTML, CSS, vanilla JavaScript |
-| AI | Anthropic Claude API (`claude-sonnet-4-20250514`) |
-| Vision | Claude native image input (reads photographed notices) |
+| AI | Anthropic Claude API (`openai/gpt-oss-120b:free`) |
+| Vision | Text extraction from uploaded images |
 | Speech | Browser Web Speech API (no external dependency) |
 | Storage | None — all data stays in the user's browser session |
 | Hosting | Static files — deployable anywhere |
@@ -124,7 +124,7 @@ All 7 files must be in the same directory for navigation and shared styles to wo
 ```
 
 ### Get an API key
-1. Go to [console.anthropic.com](https://console.anthropic.com)
+1. Go to [openrouter.ai/settings/keys](https://openrouter.ai/settings/keys)
 2. Create an account and generate an API key
 3. Paste it into the API key field on the Analyze page
 4. Your key is used only for direct calls to git Anthropic — it is never stored or logged
